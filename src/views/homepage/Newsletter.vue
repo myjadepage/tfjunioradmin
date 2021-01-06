@@ -185,7 +185,7 @@
 <script>
 import VueBootstrap4Table from "vue-bootstrap4-table";
 import pageHeader from "@/mixin/pageHeader";
-import DateSelect from "./../../components/DateSelect";
+import DateSelect from "./../../components/datepicker/DateSelect";
 
 export default {
   mixins: [pageHeader({ title: "뉴스레터 관리", groupName: "홈페이지관리" })],

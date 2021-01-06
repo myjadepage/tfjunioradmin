@@ -5,7 +5,7 @@
       <SideBar />
       <div class="content-inner" :class="{ active: isSideActive }">
         <transition name="fade" mode="out-in">
-          <router-view />
+          <router-tab></router-tab>
         </transition>
         <Footer />
         <a href="#" class="go-top"><i class="la la-arrow-up"></i></a>

@@ -2,6 +2,25 @@ import axios from "axios";
 
 axios.defaults.baseURL = "http://192.168.232.51:8080/toefladmin";
 
+// 공통
+// 1. 지역총판조회
+export function getAgencyArea() {
+  return axios.get("/api/commonList/find");
+}
+// 2. 총판조회
+export function getAgentcode() {
+  return axios.get("/api/commonList/find/agentcode");
+}
+// 3. 지역조회
+export function getAreacode() {
+  return axios.get("/api/commonList/find/areacode");
+}
+// 3. 시험유형, 회차조회
+export function getTestTypeSeq() {
+  return axios.get("/api/commonList/find/testtypeseq");
+}
+
+// 계정관리
 export function getAdminUser() {
   return axios.get("/api/admuser/find");
 }
@@ -56,9 +75,4 @@ export function getGroupMember() {
 //1. 시험생성
 export function getTestMakeList() {
   return axios.get("/api/testmakeList/find");
-}
-
-//2. 시험유형, 회차 조회
-export function getTestType() {
-  return axios.get("/api/testmakeList/find/search");
 }

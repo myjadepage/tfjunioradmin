@@ -29,14 +29,14 @@ body {
 }
 
 a {
-  color: #087f83;
+  color: #000;
   text-decoration: none;
   transition: all 0.5s ease;
 }
 
 a:focus,
 a:hover {
-  color: #e76c90;
+  color: #087f83;
   text-decoration: underline;
 }
 
@@ -3008,7 +3008,7 @@ section.forms form small {
   height: 40px;
   line-height: 40px;
   padding-left: 15px;
-  background-color: #fff;
+  background-color: #94a4b0;
 }
 .router-tab__header li span {
   font-size: 0.8rem;

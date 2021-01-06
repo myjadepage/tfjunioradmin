@@ -10,7 +10,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "@/assets/tfjunior.css";
 import "jquery.nicescroll";
 
+import RouterTab from "vue-router-tab";
+import "vue-router-tab/dist/lib/vue-router-tab.css";
+
 Vue.config.productionTip = false;
+Vue.use(RouterTab);
 Vue.use(vueMoment);
 
 new Vue({

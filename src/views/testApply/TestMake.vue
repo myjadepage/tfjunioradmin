@@ -19,7 +19,7 @@
                   <div class="col-sm-9">
                     <select
                       class="form-control"
-                      v-model="searchParam.testType"
+                      v-model="searchParam.testTypeCode"
                       @change="onCodeChange"
                     >
                       <option value="">선택</option>
@@ -41,7 +41,7 @@
                     <select class="form-control" v-model="searchParam.testSeq">
                       <option value="">선택</option>
                       <option
-                        :value="data.testCode"
+                        :value="data.testSeq"
                         v-for="data in testseqDtoList"
                         :key="data.testCode"
                         >{{ data.testSeq }}</option
@@ -64,9 +64,7 @@
     <div class="widget has-shadow">
       <div class="widget-header bordered">
         <div class="row">
-          <div
-            class="col-sm-6 d-flex align-items-center justify-content-md-start justify-content-center"
-          >
+          <div class="col-sm-6 d-flex align-items-center justify-content-start">
             <!--table pageper-->
             <div class="dropdown show vbt-per-page-dropdown col-sm-2">
               <a
@@ -93,7 +91,11 @@
                 </a>
               </div>
             </div>
-            <label class="col-sm-4">조회건수 : {{ rows.length }} 건</label>
+            <label class="col-sm-4 mt-2"
+              >조회건수 :
+              {{ searchFlag === true ? searchRows.length : rows.length }}
+              건</label
+            >
           </div>
           <div
             class="col-sm-6 d-flex align-items-center justify-content-md-end justify-content-center"
@@ -115,7 +117,7 @@
       </div>
       <div class="widget-body">
         <VueBootstrap4Table
-          :rows="rows"
+          :rows="searchFlag === true ? searchRows : rows"
           :columns="columns"
           :config="config"
           :classes="classes"
@@ -124,8 +126,14 @@
           <template slot="empty-results">
             조회된 정보가 없습니다.
           </template>
-          <template slot="dmState" slot-scope="props">
-            {{ props.cell_value === "CONFIRM" ? "승인" : "거절" }}
+          <template slot="testName" slot-scope="props">
+            <router-link
+              :to="{
+                name: 'TestMakeViewPlan',
+                params: { testCode: props.row.testCode, obj: props.row }
+              }"
+              >{{ props.cell_value }}</router-link
+            >
           </template>
         </VueBootstrap4Table>
       </div>
@@ -137,7 +145,7 @@
 <script>
 import VueBootstrap4Table from "vue-bootstrap4-table";
 import pageHeader from "@/mixin/pageHeader";
-import { getTestType, getTestMakeList } from "@/api";
+import { getTestTypeSeq, getTestMakeList } from "@/api";
 
 export default {
   mixins: [pageHeader({ title: "시험생성", groupName: "시험접수" })],
@@ -150,15 +158,32 @@ export default {
       testtypeDtoList: [],
       testseqDtoList: [],
       rows: [],
+      searchRows: [],
       columns: [
-        { label: "No", name: "dgmCode", sort: true },
-        { label: "시험진행상태", name: "daadId", sort: true },
-        { label: "시험명", name: "dmName", sort: true },
-        { label: "시험유형", name: "dgmUserid", sort: true },
-        { label: "시험회차", name: "dgmOfficeNum", sort: true },
-        { label: "응시일시", name: "dgmUsername", sort: true },
-        { label: "접수기간", name: "dgmGroupType", sort: true },
-        { label: "응시료", name: "dmState", sort: true }
+        {
+          label: "No",
+          name: "index",
+          sort: true,
+          initial_sort: true,
+          initial_sort_order: "desc"
+        },
+        { label: "시험진행상태", name: "ccodeName", sort: true },
+        {
+          label: "시험명",
+          name: "testName",
+          sort: true,
+          row_classes: "table-text-left notice-ellipsis"
+        },
+        {
+          label: "시험유형",
+          name: "ptestTypeCode",
+          sort: true,
+          row_classes: "table-text-left"
+        },
+        { label: "시험회차", name: "testSeq", sort: true },
+        { label: "응시일시", name: "testDate", sort: true },
+        { label: "접수기간", name: "applyDate", sort: true },
+        { label: "응시료", name: "testFee", sort: true }
       ],
       config: {
         pagination: true,
@@ -185,12 +210,13 @@ export default {
       },
       showLoader: false,
       searchParam: {
-        testType: "",
+        testTypeCode: "",
         testSeq: ""
-      }
+      },
+      searchFlag: false
     };
   },
-  mounted() {
+  created() {
     this.showLoader = true;
     this.selectType();
     this.init();
@@ -200,8 +226,30 @@ export default {
       getTestMakeList()
         .then(res => {
           this.rows = res.data;
+          this.rows = this.rows.map((el, index) => {
+            const container = {};
+            container.index = index + 1;
+            container.applyDate = `${this.$moment(el.applyStartDate).format(
+              "YYYY-MM-DD"
+            )} ~ ${this.$moment(el.applyEndDate).format("YYYY-MM-DD")}`;
+            container.ccodeName = el.ccodeName;
+            container.enterTimeHhmm = el.enterTimeHhmm;
+            container.ptestTypeCode = el.ptestTypeCode;
+            container.showTestIdYn = el.showTestIdYn;
+            container.testCode = el.testCode;
+            container.testDate = `${this.$moment(el.testDate).format(
+              "YYYY-MM-DD"
+            )} ${el.testTimeHhmm}`;
+            container.testFee = this.numberWithCommas(el.testFee);
+            container.testName = el.testName;
+            container.testProgress = el.testProgress;
+            container.testSeq = el.testSeq;
+            container.testTypeCode = el.testTypeCode;
+            return container;
+          });
+
+          this.searchFlag = false;
           this.showLoader = false;
-          console.log(res);
         })
         .catch(err => {
           this.showLoader = false;
@@ -209,17 +257,18 @@ export default {
         });
     },
     selectType() {
-      getTestType()
+      // 시험유형 선택하기
+      getTestTypeSeq()
         .then(res => {
           this.selectRow = res.data;
           this.testtypeDtoList = this.selectRow.testtypeDtoList;
-          console.log(res);
         })
         .catch(err => {
           console.log(err);
         });
     },
     onCodeChange(e) {
+      // 시험유형별 회차 선택하기
       this.testseqDtoList = this.selectRow.testseqDtoList.filter(el => {
         return el.testCode.split("-")[0] === e.target.value;
       });
@@ -229,7 +278,26 @@ export default {
     perPageHandler(option) {
       this.config.per_page = option;
     },
-    searchBtn() {}
+    searchBtn() {
+      if (this.searchParam.testTypeCode === "") {
+        this.searchFlag = false;
+        return this.rows;
+      } else {
+        this.searchFlag = true;
+        this.searchRows = this.rows.filter(el => {
+          if (this.searchParam.testSeq === "") {
+            return el.testTypeCode === this.searchParam.testTypeCode;
+          }
+          return (
+            el.testTypeCode === this.searchParam.testTypeCode &&
+            el.testSeq === this.searchParam.testSeq
+          );
+        });
+      }
+    },
+    numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
   }
 };
 </script>

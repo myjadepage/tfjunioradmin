@@ -184,7 +184,7 @@
 <script>
 import VueBootstrap4Table from "vue-bootstrap4-table";
 import pageHeader from "@/mixin/pageHeader";
-import DateSelect from "./../../components/DateSelect";
+import DateSelect from "./../../components/datepicker/DateSelect";
 import { getBanner } from "@/api";
 
 export default {

@@ -165,6 +165,14 @@ const routes = [
         }
       },
       {
+        path: "/testApply/testMakeViewPlan/:testCode",
+        name: "TestMakeViewPlan",
+        component: () => import("@/views/testApply/TestMakeViewPlan"),
+        meta: {
+          title: "정기시험보기"
+        }
+      },
+      {
         path: "/testApply/personApply",
         name: "PersonApply",
         component: () => import("@/views/testApply/PersonApply"),

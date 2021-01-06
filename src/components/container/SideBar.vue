@@ -142,6 +142,7 @@
 <script>
 import $ from "jquery";
 import SidebarMenu from "./sidebar/SidebarMenu";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -217,9 +218,7 @@ export default {
     this.makeCollapse();
   },
   computed: {
-    isShrinked() {
-      return this.$store.state.isSideOpen;
-    }
+    ...mapGetters("navToggle", ["isShrinked"])
     // currentPage () {
     //   console.log(this.$route.path)
     //   return this.$route.path
