@@ -43,7 +43,6 @@ export default {
   },
   mounted() {
     this.obj = this.$route.params.obj;
-    console.log(this.obj);
   },
   methods: {
     tabCon(index) {

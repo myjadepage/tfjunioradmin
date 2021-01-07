@@ -18,7 +18,7 @@
         v-for="(data, index) in timeHour"
         :key="index"
       >
-        {{ data.value }}</option
+        {{ data.title }}</option
       >
     </select>
     <span class="input-group-addon">시</span>
@@ -27,7 +27,7 @@
     <select class="form-control col-sm-2" v-model="getStartMin">
       <option value="">선택</option>
       <option :value="data.value" v-for="(data, index) in timeMin" :key="index">
-        {{ data.value }}</option
+        {{ data.title }}</option
       >
     </select>
     <span class="input-group-addon">분</span>
@@ -61,35 +61,33 @@ export default {
       startdate: new Date(),
       ko: ko,
       timeHour: [
-        { value: "01" },
-        { value: "02" },
-        { value: "03" },
-        { value: "04" },
-        { value: "05" },
-        { value: "06" },
-        { value: "07" },
-        { value: "08" },
-        { value: "09" },
-        { value: "10" },
-        { value: "11" },
-        { value: "12" }
+        { value: "01", title: "01" },
+        { value: "02", title: "02" },
+        { value: "03", title: "03" },
+        { value: "04", title: "04" },
+        { value: "05", title: "05" },
+        { value: "06", title: "06" },
+        { value: "07", title: "07" },
+        { value: "08", title: "08" },
+        { value: "09", title: "09" },
+        { value: "10", title: "10" },
+        { value: "11", title: "11" },
+        { value: "12", title: "12" }
       ],
       timeMin: [
-        { value: "00" },
-        { value: "05" },
-        { value: "10" },
-        { value: "15" },
-        { value: "20" },
-        { value: "25" },
-        { value: "30" },
-        { value: "35" },
-        { value: "40" },
-        { value: "45" },
-        { value: "50" },
-        { value: "55" }
-      ],
-      selectHour: "",
-      selectMin: ""
+        { value: "00", title: "00" },
+        { value: "05", title: "05" },
+        { value: "10", title: "10" },
+        { value: "15", title: "15" },
+        { value: "20", title: "20" },
+        { value: "25", title: "25" },
+        { value: "30", title: "30" },
+        { value: "35", title: "35" },
+        { value: "40", title: "40" },
+        { value: "45", title: "45" },
+        { value: "50", title: "50" },
+        { value: "55", title: "55" }
+      ]
     };
   },
   computed: {

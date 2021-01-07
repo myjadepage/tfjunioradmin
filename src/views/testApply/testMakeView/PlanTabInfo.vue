@@ -13,13 +13,17 @@
           <tr>
             <th scope="row">시험구분</th>
             <td colspan="3">
-              <input
-                type="text"
-                class="form-control"
-                placeholder=""
-                :value="getObj.ptestTypeCode"
-                readonly
-              />
+              <div class="row">
+                <div class="col-sm-6">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder=""
+                    :value="getObj.ptestTypeCode"
+                    readonly
+                  />
+                </div>
+              </div>
             </td>
           </tr>
           <tr>
@@ -28,7 +32,9 @@
               <div class="row">
                 <div class="col-sm-6">
                   <select class="form-control" v-model="getObj.ptestTypeCode">
-                    <option value="">{{ getObj.ptestTypeCode }}</option>
+                    <option :value="getObj.ptestTypeCode">{{
+                      getObj.ptestTypeCode
+                    }}</option>
                   </select>
                 </div>
               </div>
@@ -36,10 +42,10 @@
             <th>시험회차</th>
             <td>
               <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-3">
                   <input
                     class="form-control"
-                    :value="getObj.testSeq"
+                    v-model="getObj.testSeq"
                     readonly
                   />
                 </div>
@@ -50,22 +56,16 @@
           <tr>
             <th scope="row">시험명</th>
             <td>
-              <div class="row">
-                <div class="col-sm-6">
-                  <input
-                    class="form-control"
-                    :value="getObj.testName"
-                    readonly
-                  />
-                </div>
-              </div>
+              <input class="form-control" v-model="getObj.testName" readonly />
             </td>
             <th>시험진행상태</th>
             <td>
               <div class="row">
                 <div class="col-sm-6">
                   <select class="form-control" v-model="getObj.ccodeName">
-                    <option value="">{{ getObj.ccodeName }}</option>
+                    <option :value="getObj.ccodeName">{{
+                      getObj.ccodeName
+                    }}</option>
                   </select>
                 </div>
               </div>
@@ -76,21 +76,17 @@
             <th scope="row">응시일시</th>
             <td>
               <date-select-time
-                @state-start-date="getObj.testDate"
-                @state-start-hour="applyHour"
-                :defStartDate="applyDate"
-                :defStartHour="applyHour"
-                :defStartMin="applyMin"
+                :defStartDate="getObj.testDate"
+                :defStartHour="$moment(getObj.testDate).format('hh')"
+                :defStartMin="$moment(getObj.testDate).format('mm')"
               ></date-select-time>
             </td>
             <th>입실일시</th>
             <td>
               <date-select-time
-                @state-start-date="getObj.testDate"
-                @state-start-hour="getObj.enterTimeHhmm"
-                :defStartDate="applyDate"
-                :defStartHour="applyHour"
-                :defStartMin="applyMin"
+                :defStartDate="getObj.testDate"
+                :defStartHour="getHour('1')"
+                :defStartMin="getHour('2')"
               ></date-select-time>
             </td>
           </tr>
@@ -99,27 +95,11 @@
             <th scope="row">접수기간</th>
             <td colspan="3">
               <div class="row">
-                <div class="col-sm-4 no-padding-right">
-                  <date-select-time
-                    @state-start-date="applyDate"
-                    @state-start-hour="applyHour"
-                    :defStartDate="applyDate"
-                    :defStartHour="applyHour"
-                    :defStartMin="applyMin"
-                  ></date-select-time>
-                </div>
+                <div class="col-sm-4 no-padding-right"></div>
                 <div class="input-group col-sm-1">
                   <span class="input-group-addon">~</span>
                 </div>
-                <div class="col-sm-4  no-padding-left">
-                  <date-select-time
-                    @state-start-date="applyDate"
-                    @state-start-hour="applyHour"
-                    :defStartDate="applyDate"
-                    :defStartHour="applyHour"
-                    :defStartMin="applyMin"
-                  ></date-select-time>
-                </div>
+                <div class="col-sm-4  no-padding-left"></div>
               </div>
             </td>
           </tr>
@@ -129,7 +109,7 @@
             <td>
               <div class="input-group">
                 <datepicker
-                  :value="refundAll"
+                  v-model="getObj.testDate"
                   :format="getFormatDate"
                   :language="ko"
                   input-class="form-control"
@@ -144,7 +124,7 @@
             <td>
               <div class="input-group">
                 <datepicker
-                  :value="refundHalf"
+                  v-model="getObj.testDate"
                   :format="getFormatDate"
                   :language="ko"
                   input-class="form-control"
@@ -161,21 +141,17 @@
             <th scope="row">변경마감일시</th>
             <td>
               <date-select-time
-                @state-start-date="applyDate"
-                @state-start-hour="applyHour"
-                :defStartDate="applyDate"
-                :defStartHour="applyHour"
-                :defStartMin="applyMin"
+                :defStartDate="getObj.testDate"
+                :defStartHour="$moment(getObj.testDate).format('hh')"
+                :defStartMin="$moment(getObj.testDate).format('mm')"
               ></date-select-time>
             </td>
             <th>성적발표일시</th>
             <td>
               <date-select-time
-                @state-start-date="applyDate"
-                @state-start-hour="applyHour"
-                :defStartDate="applyDate"
-                :defStartHour="applyHour"
-                :defStartMin="applyMin"
+                :defStartDate="getObj.testDate"
+                :defStartHour="$moment(getObj.testDate).format('hh')"
+                :defStartMin="$moment(getObj.testDate).format('mm')"
               ></date-select-time>
             </td>
           </tr>
@@ -192,6 +168,8 @@
                   <input
                     type="checkbox"
                     id="resign-1"
+                    true-value="Y"
+                    false-value="N"
                     v-model="getObj.showTestIdYn"
                   />
                   <label for="resign-1">수험표 공개</label>
@@ -272,6 +250,15 @@ export default {
   methods: {
     getFormatDate(date) {
       return this.$moment(date).format("YYYY-MM-DD");
+    },
+    getHour(type) {
+      if (this.getObj.enterTimeHhmm) {
+        if (type === "1") {
+          return this.getObj.enterTimeHhmm.split(":")[0];
+        } else {
+          return this.getObj.enterTimeHhmm.split(":")[1];
+        }
+      }
     }
   }
 };
